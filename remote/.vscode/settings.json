@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.ejs": "html",
+    "*.tcc": "cpp"
+  }
+  "workbench.colorCustomizations": {
+    "editor.background": "#2c302a"
+  }
+}
