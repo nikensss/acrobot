@@ -1,3 +1,5 @@
+#ifndef BUZZER_H
+#define BUZZER_H
 
 class Buzzer {
 private:
@@ -6,4 +8,6 @@ private:
 public:
   void update();
   void set(uint16_t time);
-}
+};
+
+#endif

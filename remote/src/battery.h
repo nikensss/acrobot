@@ -5,7 +5,7 @@
 
 class Battery {
 public:
-  Battery(Buzzer &buzzer);
+  Battery(Buzzer &buzzer, RunningMedian &samples, int8_t percent);
   void sleep();
   void awake();
   void update();

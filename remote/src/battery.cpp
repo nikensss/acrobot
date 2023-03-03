@@ -3,11 +3,10 @@
 #define BATTERY_V 35;
 #define LOW_POWER_SW 18
 
-Battery::Battery(Buzzer &buzzer) : buzzer(buzzer) {
-  samples = RunningMedian(64);
-  percent = map(samples.getAverage(), 2060, 2370, 0, 100);
+Battery::Battery(Buzzer &buzzer, RunningMedian &samples, int8_t percent)
+    : buzzer(buzzer), samples(samples), percent(percent) {
   isCharging = false;
-  alarmTimer = millis();
+  alarmTimer = 0;
 }
 
 void Battery::sleep() {
