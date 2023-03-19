@@ -1,21 +1,30 @@
 #ifndef BATTERY_H
 #define BATTERY_H
 
-#include "buzzer.h";
+#include <Arduino.h>
+#include <physicalSwitch.h>
+#include <RunningMedian.h>
+#include <WiFi.h>
+#include <buzzer.h>
 
-class Battery {
+class Battery
+{
 public:
-  Battery(Buzzer &buzzer, RunningMedian &samples, int8_t percent);
+  Battery(Buzzer &buzzer, PhysicalSwitch &lowPowerSwitch);
+  bool shouldSleep();
   void sleep();
-  void awake();
+  bool shouldWakeUp();
+  void wakeUp();
+  bool shouldBuzzerBuzz();
   void update();
+  int8_t getPercentage();
 
 private:
   Buzzer &buzzer;
+  PhysicalSwitch &lowPowerSwitch;
   RunningMedian samples;
-  int8_t percent;
-  bool isCharging;
   uint32_t alarmTimer;
+  int8_t percentage;
 };
 
 #endif

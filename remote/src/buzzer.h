@@ -1,13 +1,18 @@
 #ifndef BUZZER_H
 #define BUZZER_H
 
-class Buzzer {
-private:
-  uint32_t timer = 0;
+#include <Arduino.h>
 
+class Buzzer
+{
 public:
+  Buzzer(uint8_t pin);
   void update();
-  void set(uint16_t time);
+  void buzzFor(uint16_t time);
+
+private:
+  uint8_t pin;
+  uint32_t timer = 0;
 };
 
 #endif

@@ -1,47 +1,70 @@
 #include "battery.h"
 
-#define BATTERY_V 35;
-#define LOW_POWER_SW 18
+#define BATTERY_V 35
 
-Battery::Battery(Buzzer &buzzer, RunningMedian &samples, int8_t percent)
-    : buzzer(buzzer), samples(samples), percent(percent) {
-  isCharging = false;
-  alarmTimer = 0;
+Battery::Battery(Buzzer &buzzer, PhysicalSwitch &lowPowerSwitch)
+    : buzzer(buzzer), lowPowerSwitch(lowPowerSwitch), samples(64)
+{
+  alarmTimer = millis();
 }
 
-void Battery::sleep() {
+void Battery::sleep()
+{
   WiFi.setSleep(true);
   setCpuFrequencyMhz(80);
   Serial.println("sleep mode enabled");
 }
 
-void Battery::awake() {
+void Battery::wakeUp()
+{
   WiFi.setSleep(false);
   setCpuFrequencyMhz(240);
   Serial.println("sleep mode disabled");
 }
 
-void Battery::update() {
-  samples.add(analogRead(BATTERY_V));
+bool Battery::shouldSleep()
+{
+  return lowPowerSwitch.isOn() && lowPowerSwitch.hasChanged();
+}
 
+bool Battery::shouldWakeUp()
+{
+  return lowPowerSwitch.isOff() && lowPowerSwitch.hasChanged();
+}
+
+bool Battery::shouldBuzzerBuzz()
+{
+  return getPercentage() < 10 && alarmTimer < millis() && lowPowerSwitch.isOff();
+}
+
+int8_t Battery::getPercentage()
+{
   // 2060 =~ 3.65v, 2370 =~ 4.2v
-  percent = map(samples.getAverage(), 2060, 2370, 0, 100);
+  return percentage;
+}
 
-  if (digitalRead(LOW_POWER_SW) && !isCharging) {
-    isCharging = true;
+void Battery::update()
+{
+  samples.add(analogRead(BATTERY_V));
+  // 2060 =~ 3.65v, 2370 =~ 4.2v
+  percentage = map(samples.getAverage(), 2060, 2370, 0, 100);
+
+  if (shouldSleep())
+  {
     sleep();
   }
 
-  if (!digitalRead(LOW_POWER_SW) && isCharging) {
-    isCharging = false;
-    awake();
-    lcd.init();
-    lcd.clear();
-    setLCD();
+  if (shouldWakeUp())
+  {
+    wakeUp();
+    // lcd.init();
+    // lcd.clear();
+    // setLCD();
   }
 
-  if (percent < 10 && alarmTimer < millis() && !isCharging) {
-    buzzer.set(300);
+  if (shouldBuzzerBuzz())
+  {
+    buzzer.buzzFor(300);
     alarmTimer = millis() + 600;
   }
 }

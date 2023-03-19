@@ -1,7 +1,16 @@
-#include "buzzer.h";
+#include <buzzer.h>
 
-#define BUZZER 13
+Buzzer::Buzzer(uint8_t pin) : pin(pin)
+{
+  pinMode(pin, OUTPUT);
+}
 
-void Buzzer::update() { digitalWrite(BUZZER, timer > millis() ? HIGH : LOW); }
+void Buzzer::update()
+{
+  digitalWrite(pin, timer > millis());
+}
 
-void Buzzer::set(uint16_t time) { timer = millis() + time; }
+void Buzzer::buzzFor(uint16_t ms)
+{
+  timer = millis() + ms;
+}
