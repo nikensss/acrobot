@@ -7,13 +7,15 @@ class PhysicalSwitch
 {
 public:
   PhysicalSwitch(uint8_t pin, uint8_t mode);
+  void init();
   bool hasChanged();
   bool isOn();
   bool isOff();
   void update();
 
 private:
-  uint pin;
+  uint8_t pin;
+  uint8_t mode;
   bool currentState;
   bool previousState;
 };

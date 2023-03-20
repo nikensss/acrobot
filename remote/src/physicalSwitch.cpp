@@ -1,7 +1,11 @@
 #include <physicalSwitch.h>
 
-PhysicalSwitch::PhysicalSwitch(uint8_t pin, uint8_t mode) : pin(pin)
+PhysicalSwitch::PhysicalSwitch(uint8_t pin, uint8_t mode) : pin(pin), mode(mode)
 {
+  
+}
+
+void PhysicalSwitch::init(){
   pinMode(pin, mode);
   currentState = digitalRead(pin);
   previousState = currentState;

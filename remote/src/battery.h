@@ -10,21 +10,22 @@
 class Battery
 {
 public:
-  Battery(Buzzer &buzzer, PhysicalSwitch &lowPowerSwitch);
-  bool shouldSleep();
-  void sleep();
-  bool shouldWakeUp();
-  void wakeUp();
-  bool shouldBuzzerBuzz();
+  Battery(uint8_t pin, Buzzer &buzzer, PhysicalSwitch &lowPowerSwitch);
   void update();
   int8_t getPercentage();
 
 private:
+  uint8_t pin;
   Buzzer &buzzer;
   PhysicalSwitch &lowPowerSwitch;
   RunningMedian samples;
   uint32_t alarmTimer;
   int8_t percentage;
+  bool shouldSleep();
+  bool shouldWakeUp();
+  bool shouldBuzzerBuzz();
+  void sleep();
+  void wakeUp();
 };
 
 #endif
