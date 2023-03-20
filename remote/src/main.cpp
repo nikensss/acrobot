@@ -323,6 +323,7 @@ void loop()
                    // loop
   buzzer.update();  // play buzzer if buzzertimer is high
   lcd.update();
+  lowPowerSwitch.update();
   updateLED();
   readADS();
 
