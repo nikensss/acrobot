@@ -1,3 +1,8 @@
+#ifndef MOTORCONTROLLER_H
+#define MOTORCONTROLLER_H
+
+
+#include <Arduino.h>
 #include <PID_v1.h> // https://github.com/br3ttb/
 
 class MotorController {
@@ -10,6 +15,11 @@ public:
   void setKp(double Kp);
   void setKi(double Ki);
   void setKd(double Kd);
+
+  double getTarget();
+  double getKp();
+  double getKi();
+  double getKd();
 
 private:
   uint8_t forwardPwmChannel, backwardPwmChannel, deadBand;
@@ -24,3 +34,5 @@ private:
   void updatePid();
   void updateMotor();
 };
+
+#endif

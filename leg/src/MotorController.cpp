@@ -1,10 +1,10 @@
-#include "Motor_Controller.h"
+#include "MotorController.h"
 
 MotorController::MotorController(uint8_t forwardPwmChannel, uint8_t backwardPwmChannel, uint16_t range, uint8_t deadBand, Encoder &encoder) 
   : forwardPwmChannel(forwardPwmChannel), backwardPwmChannel(backwardPwmChannel), range(range), deadBand(deadBand), encoder(encoder) {
   pid = PID(&pidInput, &pidOutput, &pidTarget, Kp, Ki, Kd, DIRECT);
   pid.SetMode(AUTOMATIC);
-  pid.SetpidOutputLimits(-range, range);
+  pid.SetOutputLimits(-range, range);
   pid.SetSampleTime(1);
 }
 
@@ -32,16 +32,32 @@ void MotorController::setKd(double Kd) {
   pid.SetTunings(this->Kp, this->Ki, this->Kd);
 }
 
+double MotorController::getTarget() {
+  return pidTarget;
+}
+
+double MotorController::getKp() {
+  return Kp;
+}
+
+double MotorController::getKi() {
+  return Ki;
+}
+
+double MotorController::getKd() {
+  return Kd;
+}
+
 void MotorController::updatePid() {
   pidInput = encoder.getPositionInDegrees();
   pid.Compute();
 }
 
-void MotorController::updateMotors() {
+void MotorController::updateMotor() {
   uint16_t forwardDuty = pidOutput > 1 ? map(abs(pidOutput), 0, range, deadBand, range): 0;
   uint16_t backwardDuty = pidOutput < -1 ? map(abs(pidOutput), 0, range, deadBand, range): 0;
 
-  ledcWrite(forwardPwmChannel, fowardDuty);
+  ledcWrite(forwardPwmChannel, forwardDuty);
   ledcWrite(backwardPwmChannel, backwardDuty);
 }
 

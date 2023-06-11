@@ -35,6 +35,14 @@ Status light: Blue = connected wireless, Red = disconnected wireless
 
 #define ENCODER_L_PWM 15
 
+// TODO:
+// Create encoder class & files
+// Remove old encoder & motorcontrollers from main
+// Import and combine component classes from the 'remote' project
+// Finish up, test everything :)
+
+
+
 // ---------------
 // MARK: - FORWARD DECLARATIONS in order of document 
 
